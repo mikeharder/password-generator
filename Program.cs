@@ -1,32 +1,29 @@
-﻿using CommandLine;
-using System;
-using System.Web.Security;
+﻿using System.Security.Cryptography;
 
 namespace PasswordGenerator
 {
-    class Program
+    internal class Program
     {
-        private class Options
+        private const string _lowercase = "abcdefghijklmnopqrstuvwxyz";
+        private const string _uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const string _numbers = "0123456789";
+        
+        // https://en.wikipedia.org/wiki/List_of_Special_Characters_for_Passwords
+        private const string _symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+        
+        private const string _all = _lowercase + _uppercase + _numbers + _symbols;
+            
+        static void Main(int length = 16, int minSymbols = 2)
         {
-            [Option('l', "length", Default = 16)]
-            public int Length { get; set; }
-
-            [Option('n', "nonAlphaNumeric", Default = 2)]
-            public int NonAlphaNumeric { get; set; }
-        }
-
-        static int Main(string[] args)
-        {
-            return Parser.Default.ParseArguments<Options>(args).MapResult(
-                options => Run(options),
-                _ => 1
-            );
-        }
-
-        private static int Run(Options options)
-        {
-            Console.WriteLine(Membership.GeneratePassword(options.Length, options.NonAlphaNumeric));
-            return 0;
+            char[] password = new char[length];
+            while (password.Count(c => _symbols.Contains(c)) < minSymbols)
+            {
+                for (var i=0; i < length; i++)
+                {
+                    password[i] = _all[RandomNumberGenerator.GetInt32(0, _all.Length)];
+                }
+            }
+            Console.WriteLine(new string(password));
         }
     }
 }
