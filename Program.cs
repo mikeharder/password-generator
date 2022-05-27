@@ -11,7 +11,7 @@ namespace PasswordGenerator
         // https://en.wikipedia.org/wiki/List_of_Special_Characters_for_Passwords
         private const string _symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
         
-        private const string _all = _lowercase + _uppercase + _numbers + _symbols;
+        private const string _availableChars = _lowercase + _uppercase + _numbers + _symbols;
             
         static void Main(int length = 16, int minSymbols = 2)
         {
@@ -20,7 +20,7 @@ namespace PasswordGenerator
             {
                 for (var i=0; i < length; i++)
                 {
-                    password[i] = _all[RandomNumberGenerator.GetInt32(0, _all.Length)];
+                    password[i] = _availableChars[RandomNumberGenerator.GetInt32(0, _availableChars.Length)];
                 }
             }
             Console.WriteLine(new string(password));
